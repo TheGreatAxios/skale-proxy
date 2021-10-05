@@ -117,6 +117,10 @@ def print_global_server_config(_f, _use_ssl: bool) -> None:
     _f.write("		proxy_cache_bypass $http_upgrade;\n")
     _f.write("	}\n")
 
+    _f.write("	location /files/ {\n")
+    _f.write("		root /usr/share/nginx/www;\n")
+    _f.write("	}\n")
+
 
 def print_group_definition(_chain_info: ChainInfo, _f) -> None:
     _f.write("upstream " + _chain_info.chain_name + " {\n")
@@ -205,9 +209,9 @@ def main():
         subprocess.check_call(["/bin/bash", "-c",
                               "cp /etc/abi.json /tmp/abi.json"])
         subprocess.check_call(["python3", "/etc/endpoints.py"])
-        subprocess.check_call(["/bin/bash", "-c", "mkdir -p /usr/share/nginx/www"])
-        subprocess.check_call(["/bin/bash", "-c", "cp -f /tmp/chains.json /usr/share/nginx/www/chains.json"])
-        subprocess.check_call(["/bin/bash", "-c", "cp -f /etc/VERSION /usr/share/nginx/www/VERSION.txt"])
+        subprocess.check_call(["/bin/bash", "-c", "mkdir -p /usr/share/nginx/www/files"])
+        subprocess.check_call(["/bin/bash", "-c", "cp -f /tmp/chains.json /usr/share/nginx/www/files/chains.json"])
+        subprocess.check_call(["/bin/bash", "-c", "cp -f /etc/VERSION /usr/share/nginx/www/files/VERSION.txt"])
 
         if not os.path.exists(RESULTS_PATH):
             print("Fatal error: Chains file does not exist. Exiting ...")
