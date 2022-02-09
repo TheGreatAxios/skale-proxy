@@ -135,17 +135,9 @@ def endpoints_for_all_schains():
     nodes_contract = web3.eth.contract(address=sm_abi['nodes_address'], abi=sm_abi['nodes_abi'])
     schain_ids = schains_internal_contract.functions.getSchains().call()
 
-    print('----------------------------------------------------------------')
-    print(FIRST_SCHAIN_ID)
-    print(LAST_SCHAIN_ID)
-
-    print(FIRST_SCHAIN_ID is not None)
-    print(LAST_SCHAIN_ID is not None)
-    print('----------------------------------------------------------------')
-
     if FIRST_SCHAIN_ID is not None and LAST_SCHAIN_ID is not None:
         print(f'Partitioning enabled: FIRST_SCHAIN_ID: {FIRST_SCHAIN_ID}, LAST_SCHAIN_ID: {LAST_SCHAIN_ID}')
-        subset_schain_ids = schain_ids[FIRST_SCHAIN_ID:LAST_SCHAIN_ID]
+        subset_schain_ids = schain_ids[int(FIRST_SCHAIN_ID):int(LAST_SCHAIN_ID)]
     else:
         print(f'Partitioning disabled, all chains will be parsed: {len(schain_ids)}')
         subset_schain_ids = schain_ids
