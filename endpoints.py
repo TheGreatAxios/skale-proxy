@@ -12,8 +12,8 @@ from Crypto.Hash import keccak
 
 ENDPOINT = os.environ['ETH_ENDPOINT']
 
-FIRST_SCHAIN_ID = os.environ['FIRST_SCHAIN_ID']
-LAST_SCHAIN_ID = os.environ['LAST_SCHAIN_ID']
+FIRST_SCHAIN_ID = os.getenv('FIRST_SCHAIN_ID', None)
+LAST_SCHAIN_ID = os.getenv('LAST_SCHAIN_ID', None)
 
 if ENDPOINT is None:
     print("Fatal error: ETH main net endpoint not set. Exiting")
@@ -135,7 +135,12 @@ def endpoints_for_all_schains():
     nodes_contract = web3.eth.contract(address=sm_abi['nodes_address'], abi=sm_abi['nodes_abi'])
     schain_ids = schains_internal_contract.functions.getSchains().call()
 
-    subset_schain_ids = schain_ids[FIRST_SCHAIN_ID:LAST_SCHAIN_ID]
+    if FIRST_SCHAIN_ID and LAST_SCHAIN_ID:
+        print(f'Partitioning enabled: FIRST_SCHAIN_ID: {FIRST_SCHAIN_ID}, LAST_SCHAIN_ID: {LAST_SCHAIN_ID}')
+        subset_schain_ids = schain_ids[FIRST_SCHAIN_ID:LAST_SCHAIN_ID]
+    else:
+        print(f'Partitioning disabled, all chains will be parsed: {len(schain_ids)}')
+        subset_schain_ids = schain_ids
 
     all_endpoints = [endpoints_for_schain(schains_internal_contract, nodes_contract, schain_id) for schain_id in subset_schain_ids]
     write_json(RESULTS_PATH, all_endpoints)
