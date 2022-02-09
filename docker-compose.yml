@@ -13,6 +13,8 @@ services:
       ETH_ENDPOINT: ${ENDPOINT}
       ENDPOINT_PREFIX: mainnet
       ABI_FILENAME: abi.json
+      FIRST_SCHAIN_ID: ${FIRST_SCHAIN_ID}
+      LAST_CHAIN_ID: ${LAST_CHAIN_ID}
     image: skale-proxy:latest
     build:
       context: .
