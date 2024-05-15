@@ -86,7 +86,7 @@ class ChainInfo:
 
 def url_ok(url) -> bool:
     try:
-        r = requests.head(url)
+        r = requests.head(url, timeout=10)
         return bool(r.status_code)
     except requests.exceptions.ConnectionError:
         return False
