@@ -74,7 +74,8 @@ def post_request(url, json, cookies=None):
         return requests.post(
             url,
             json=json,
-            cookies=cookies
+            cookies=cookies,
+            timeout=30
         )
     except requests.exceptions.RequestException:
         return None
