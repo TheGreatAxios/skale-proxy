@@ -8,6 +8,7 @@ __pycache__
 
 abi.json
 chains.json
+metrics.json
 
 conf/upstreams/*.conf
 conf/chains/*.conf

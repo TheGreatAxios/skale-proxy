@@ -1,0 +1,50 @@
+#   -*- coding: utf-8 -*-
+#
+#   This file is part of portal-metrics
+#
+#   Copyright (C) 2024 SKALE Labs
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+import os
+
+ERROR_TIMEOUT = os.getenv('MONITOR_INTERVAL', 60)
+MONITOR_INTERVAL = os.getenv('MONITOR_INTERVAL', 10800)
+NETWORK_NAME = os.getenv('NETWORK_NAME', 'mainnet')
+ENDPOINT = os.environ['ETH_ENDPOINT']
+
+PROXY_ENDPOINTS = {
+    'mainnet': 'mainnet.skalenodes.com',
+    'legacy': 'legacy-proxy.skaleserver.com',
+    'regression': 'regression-proxy.skalenodes.com',
+    'testnet': 'testnet.skalenodes.com'
+}
+
+BASE_EXPLORER_URLS = {
+    'mainnet': 'explorer.mainnet.skalenodes.com',
+    'legacy': 'legacy-explorer.skaleserver.com',
+    'regression': 'regression-explorer.skalenodes.com',
+    'testnet': 'explorer.testnet.skalenodes.com'
+}
+
+STATS_API = {
+    'mainnet': 'https://stats.explorer.mainnet.skalenodes.com/v2/stats',
+}
+
+HTTPS_PREFIX = "https://"
+
+BLOCK_SAMPLING = 100
+GAS_ESTIMATION_ITERATIONS = 300
+
+METRICS_FILEPATH = os.path.join('/', 'data', 'metrics.json')
