@@ -33,3 +33,20 @@ services:
       options:
         max-file: "200"
         max-size: "500m"
+  metrics:
+    environment:
+      ETH_ENDPOINT: ${ETH_ENDPOINT}
+      NETWORK_NAME: ${NETWORK_NAME}
+    image: metrics:latest
+    container_name: metrics
+    build:
+      context: ./metrics
+      dockerfile: Dockerfile
+    volumes:
+      - ./data:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "50m"
+    restart: unless-stopped
