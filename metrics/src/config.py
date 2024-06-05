@@ -47,4 +47,8 @@ HTTPS_PREFIX = "https://"
 BLOCK_SAMPLING = 100
 GAS_ESTIMATION_ITERATIONS = 300
 
-METRICS_FILEPATH = os.path.join('/', 'data', 'metrics.json')
+DIR_PATH = os.path.dirname(os.path.realpath(__file__))
+PROJECT_PATH = os.path.join(DIR_PATH, os.pardir)
+
+NGINX_WWW_FOLDER = os.path.join(PROJECT_PATH, 'www')
+METRICS_FILEPATH = os.path.join(NGINX_WWW_FOLDER, 'metrics.json')
