@@ -43,7 +43,7 @@ services:
       context: ./metrics
       dockerfile: Dockerfile
     volumes:
-      - ./data:/data
+      - ./www:/usr/src/metrics/www
     logging:
       driver: "json-file"
       options:
