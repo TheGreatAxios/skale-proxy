@@ -31,8 +31,6 @@ LOG_FILE_SIZE_MB = 300
 LOG_FILE_SIZE_BYTES = LOG_FILE_SIZE_MB * 1000000
 LOG_BACKUP_COUNT = 3
 
-MONITOR_INTERVAL = 600
-
 
 def get_file_handler(log_filepath, log_level):
     formatter = Formatter(LOG_FORMAT)
