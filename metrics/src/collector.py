@@ -34,8 +34,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_metadata_url(network_name: str):
-    # return f'https://raw.githubusercontent.com/skalenetwork/skale-network/master/metadata/{network_name}/chains.json' # noqa
-    return f'https://raw.githubusercontent.com/skalenetwork/skale-network/update-mainnet-chains-metadata/metadata/{network_name}/chains.json' # noqa
+    return f'https://raw.githubusercontent.com/skalenetwork/skale-network/master/metadata/{network_name}/chains.json' # noqa
 
 
 def download_metadata(network_name: str):
