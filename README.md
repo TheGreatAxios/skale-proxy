@@ -23,6 +23,10 @@ JSON-RPC endpoints for SKALE chains. It is based on NGINX.
 
 - `ETH_ENDPOINT` - endpoint of the Ethereum network where `skale-manager` contracts are deployed
 
+#### Optional environment variables
+
+- `HEARTBEAT_URL` - URL for healthcheck endpoint (optional)
+
 ## License
 
 [![License](https://img.shields.io/github/license/skalenetwork/skale-proxy.svg)](LICENSE)

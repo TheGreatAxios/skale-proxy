@@ -27,6 +27,8 @@ PORTS_PER_SCHAIN = 64
 
 MONITOR_INTERVAL = os.getenv('MONITOR_INTERVAL', 60 * 60 * 2)
 
+HEARTBEAT_URL = os.getenv('HEARTBEAT_URL')
+
 NGINX_WWW_FOLDER = os.path.join(PROJECT_PATH, 'www')
 CHAINS_INFO_FILEPATH = os.path.join(NGINX_WWW_FOLDER, 'chains.json')
 

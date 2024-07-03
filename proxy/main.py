@@ -24,10 +24,11 @@ from pathlib import Path
 from proxy.nginx import update_nginx_configs
 from proxy.endpoints import generate_endpoints
 from proxy.helper import init_default_logger, write_json
+from proxy.heartbeat import send_heartbeat
 from proxy.str_formatters import arguments_list_string
 from proxy.config import (
     CHAINS_INFO_FILEPATH, MONITOR_INTERVAL, ENDPOINT, SM_ABI_FILEPATH,
-    TMP_CHAINS_FOLDER, TMP_UPSTREAMS_FOLDER
+    TMP_CHAINS_FOLDER, TMP_UPSTREAMS_FOLDER, HEARTBEAT_URL
 )
 
 
@@ -48,6 +49,7 @@ def main():
         schains_endpoints = generate_endpoints(ENDPOINT, SM_ABI_FILEPATH)
         write_json(CHAINS_INFO_FILEPATH, schains_endpoints)
         update_nginx_configs(schains_endpoints)
+        send_heartbeat(HEARTBEAT_URL)
         logger.info(f'Proxy iteration done, sleeping for {MONITOR_INTERVAL}s...')
         sleep(MONITOR_INTERVAL)
 
