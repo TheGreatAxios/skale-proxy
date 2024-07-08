@@ -39,7 +39,7 @@ def calc_avg_gas_price():
     logger.info(f'Getting historic block gas prices...')
     for index in range(GAS_ESTIMATION_ITERATIONS):
         block_number = block_number - BLOCK_SAMPLING * index
-        if (block_number < 0):
+        if block_number < 0:
             break
         logger.info(f'Getting block {block_number}...')
         block = w3.eth.get_block(block_number)
