@@ -37,6 +37,7 @@ def get_chain_stats(network: str, chain_name: str) -> Any:
         response = requests.get(f'{explorer_url}/api/v2/stats')
         return response.json()
     except Exception as e:
+        logger.exception(e)
         logger.error(f'Failed to get chain stats: {e}')
         return None
 

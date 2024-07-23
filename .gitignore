@@ -12,3 +12,5 @@ metrics.json
 
 conf/upstreams/*.conf
 conf/chains/*.conf
+
+portal-metrics.log
