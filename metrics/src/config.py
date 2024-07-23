@@ -33,7 +33,7 @@ PROXY_ENDPOINTS = {
 
 BASE_EXPLORER_URLS = {
     'mainnet': 'explorer.mainnet.skalenodes.com',
-    'legacy': 'legacy-explorer.skaleserver.com',
+    'legacy': 'legacy-explorer.skalenodes.com',
     'regression': 'regression-explorer.skalenodes.com',
     'testnet': 'explorer.testnet.skalenodes.com'
 }
