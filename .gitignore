@@ -14,3 +14,6 @@ conf/upstreams/*.conf
 conf/chains/*.conf
 
 portal-metrics.log
+
+mysql_data/
+tools/

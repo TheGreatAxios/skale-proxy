@@ -24,8 +24,8 @@ import logging.handlers as py_handlers
 from logging import Formatter, StreamHandler
 
 
-LOG_FORMAT = '[%(asctime)s %(levelname)s] %(name)s:%(lineno)d - %(threadName)s - %(message)s'
-LOG_FILEPATH = os.path.join(os.getcwd(), 'portal-metrics.log')
+LOG_FORMAT = "[%(asctime)s %(levelname)s] %(name)s:%(lineno)d - %(threadName)s - %(message)s"
+LOG_FILEPATH = os.path.join(os.getcwd(), "portal-metrics.log")
 
 LOG_FILE_SIZE_MB = 300
 LOG_FILE_SIZE_BYTES = LOG_FILE_SIZE_MB * 1000000
@@ -35,8 +35,8 @@ LOG_BACKUP_COUNT = 3
 def get_file_handler(log_filepath, log_level):
     formatter = Formatter(LOG_FORMAT)
     f_handler = py_handlers.RotatingFileHandler(
-        log_filepath, maxBytes=LOG_FILE_SIZE_BYTES,
-        backupCount=LOG_BACKUP_COUNT)
+        log_filepath, maxBytes=LOG_FILE_SIZE_BYTES, backupCount=LOG_BACKUP_COUNT
+    )
     f_handler.setFormatter(formatter)
     f_handler.setLevel(log_level)
     return f_handler

@@ -19,36 +19,41 @@
 
 import os
 
-ERROR_TIMEOUT = os.getenv('MONITOR_INTERVAL', 60)
-MONITOR_INTERVAL = os.getenv('MONITOR_INTERVAL', 10800)
-NETWORK_NAME = os.getenv('NETWORK_NAME', 'mainnet') or 'mainnet'
-ENDPOINT = os.environ['ETH_ENDPOINT']
+ERROR_TIMEOUT = os.getenv("MONITOR_INTERVAL", 60)
+MONITOR_INTERVAL = os.getenv("MONITOR_INTERVAL", 10800)
+NETWORK_NAME = os.getenv("NETWORK_NAME", "mainnet") or "mainnet"
+ENDPOINT = os.environ["ETH_ENDPOINT"]
 
 PROXY_ENDPOINTS = {
-    'mainnet': 'mainnet.skalenodes.com',
-    'legacy': 'legacy-proxy.skaleserver.com',
-    'regression': 'regression-proxy.skalenodes.com',
-    'testnet': 'testnet.skalenodes.com'
+    "mainnet": "mainnet.skalenodes.com",
+    "legacy": "legacy-proxy.skaleserver.com",
+    "regression": "regression-proxy.skalenodes.com",
+    "testnet": "testnet.skalenodes.com",
 }
 
 BASE_EXPLORER_URLS = {
-    'mainnet': 'explorer.mainnet.skalenodes.com',
-    'legacy': 'legacy-explorer.skalenodes.com',
-    'regression': 'regression-explorer.skalenodes.com',
-    'testnet': 'explorer.testnet.skalenodes.com'
+    "mainnet": "explorer.mainnet.skalenodes.com",
+    "legacy": "legacy-explorer.skalenodes.com",
+    "regression": "regression-explorer.skalenodes.com",
+    "testnet": "explorer.testnet.skalenodes.com",
 }
-
-STATS_API = {
-    'mainnet': 'https://stats.explorer.mainnet.skalenodes.com/v2/stats',
-}
+STATS_API = {"mainnet": "https://stats.explorer.mainnet.skalenodes.com/v2/stats"}
 
 HTTPS_PREFIX = "https://"
 
 BLOCK_SAMPLING = 100
-GAS_ESTIMATION_ITERATIONS = 300
+GAS_ESTIMATION_ITERATIONS = 1
 
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 PROJECT_PATH = os.path.join(DIR_PATH, os.pardir)
 
-NGINX_WWW_FOLDER = os.path.join(PROJECT_PATH, 'www')
-METRICS_FILEPATH = os.path.join(NGINX_WWW_FOLDER, 'metrics.json')
+NGINX_WWW_FOLDER = os.path.join(PROJECT_PATH, "www")
+METRICS_FILEPATH = os.path.join(NGINX_WWW_FOLDER, "metrics.json")
+
+METRICS_CHECK_INTERVAL = 300
+METRICS_ERROR_CHECK_INTERVAL = 30
+API_ERROR_TIMEOUT = 2
+API_ERROR_RETRIES = 3
+
+GITHUB_RAW_URL = "https://raw.githubusercontent.com"
+OFFCHAIN_KEY = "__offchain"

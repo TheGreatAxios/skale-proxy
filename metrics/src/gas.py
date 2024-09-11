@@ -19,33 +19,33 @@
 
 import logging
 from web3 import Web3
-from config import ENDPOINT, GAS_ESTIMATION_ITERATIONS, BLOCK_SAMPLING
+from src.config import ENDPOINT, GAS_ESTIMATION_ITERATIONS, BLOCK_SAMPLING
 
 logger = logging.getLogger(__name__)
 
 
 def init_w3():
-    logger.info(f'Connecting to {ENDPOINT}...')
+    logger.info(f"Connecting to {ENDPOINT}...")
     return Web3(Web3.HTTPProvider(ENDPOINT))
 
 
 def calc_avg_gas_price():
     block_num = GAS_ESTIMATION_ITERATIONS * BLOCK_SAMPLING
-    logger.info(f'Calculating average gas price for the last {block_num} blocks')
+    logger.info(f"Calculating average gas price for the last {block_num} blocks")
     w3 = init_w3()
     block_number = w3.eth.block_number
     total_gas_used = 0
 
-    logger.info(f'Getting historic block gas prices...')
+    logger.info("Getting historic block gas prices...")
     for index in range(GAS_ESTIMATION_ITERATIONS):
         block_number = block_number - BLOCK_SAMPLING * index
         if block_number < 0:
             break
-        logger.info(f'Getting block {block_number}...')
+        logger.info(f"Getting block {block_number}...")
         block = w3.eth.get_block(block_number)
-        total_gas_used += block['baseFeePerGas']
+        total_gas_used += block["baseFeePerGas"]
 
     avg_gas_price = total_gas_used / GAS_ESTIMATION_ITERATIONS
-    avg_gas_price_gwei = Web3.from_wei(avg_gas_price, 'gwei')
-    logger.info(f'avg_gas_price_gwei: {avg_gas_price_gwei}')
+    avg_gas_price_gwei = Web3.from_wei(avg_gas_price, "gwei")
+    logger.info(f"avg_gas_price_gwei: {avg_gas_price_gwei}")
     return avg_gas_price_gwei
