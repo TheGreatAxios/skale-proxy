@@ -37,48 +37,48 @@ logger = logging.getLogger(__name__)
 
 
 def run_migrations():
-    logger.info("Running database migrations...")
+    logger.info('Running database migrations...')
     try:
         from models import Address, TransactionCount
 
         with db:
             db.create_tables([Address, TransactionCount])
-        logger.info("Database migrations completed successfully.")
+        logger.info('Database migrations completed successfully.')
     except Exception as e:
-        logger.error(f"Error running migrations: {e}")
+        logger.error(f'Error running migrations: {e}')
         sys.exit(1)
 
 
 def run_metrics_loop():
     if NETWORK_NAME not in PROXY_ENDPOINTS:
-        logger.error(f"Unsupported network: {NETWORK_NAME}")
+        logger.error(f'Unsupported network: {NETWORK_NAME}')
         sys.exit(1)
 
-    logger.info(f"Starting metrics collection loop for network: {NETWORK_NAME}")
+    logger.info(f'Starting metrics collection loop for network: {NETWORK_NAME}')
     last_run_date = None
 
     while True:
         current_date = datetime.now().date()
 
         if last_run_date is None or current_date > last_run_date:
-            logger.info(f"Daily metrics collection started for {NETWORK_NAME}...")
+            logger.info(f'Daily metrics collection started for {NETWORK_NAME}...')
             try:
                 with db.connection_context():
                     asyncio.run(collect_metrics(NETWORK_NAME))
                 last_run_date = current_date
-                logger.info(f"Daily metrics collection completed for {NETWORK_NAME}.")
-                logger.info(f"Sleeping for {METRICS_CHECK_INTERVAL} seconds.")
+                logger.info(f'Daily metrics collection completed for {NETWORK_NAME}.')
+                logger.info(f'Sleeping for {METRICS_CHECK_INTERVAL} seconds.')
                 sleep(METRICS_CHECK_INTERVAL)
             except Exception as e:
-                logger.exception(f"Error during metrics collection for {NETWORK_NAME}: {e}")
-                logger.info(f"Sleeping for {METRICS_ERROR_CHECK_INTERVAL} seconds after error.")
+                logger.exception(f'Error during metrics collection for {NETWORK_NAME}: {e}')
+                logger.info(f'Sleeping for {METRICS_ERROR_CHECK_INTERVAL} seconds after error.')
                 sleep(METRICS_ERROR_CHECK_INTERVAL)
         else:
             logger.info(
-                f"Not time for collection yet. \
-                Last run: {last_run_date}, Current date: {current_date}"
+                f'Not time for collection yet. \
+                Last run: {last_run_date}, Current date: {current_date}'
             )
-            logger.info(f"Sleeping for {METRICS_CHECK_INTERVAL} seconds.")
+            logger.info(f'Sleeping for {METRICS_CHECK_INTERVAL} seconds.')
             sleep(METRICS_CHECK_INTERVAL)
 
 
@@ -90,20 +90,20 @@ def wait_for_db():
         try:
             db.connect()
             db.close()
-            logger.info("Successfully connected to the database.")
+            logger.info('Successfully connected to the database.')
             return
         except Exception as e:
             logger.exception(e)
-            logger.warning(f"Database connection failed. Retrying in {retry_interval} seconds...")
+            logger.warning(f'Database connection failed. Retrying in {retry_interval} seconds...')
             sleep(retry_interval)
 
-    logger.error("Failed to connect to the database after multiple attempts.")
+    logger.error('Failed to connect to the database after multiple attempts.')
     sys.exit(1)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     init_default_logger()
-    logger.info(f"Starting metrics collector for network: {NETWORK_NAME}")
+    logger.info(f'Starting metrics collector for network: {NETWORK_NAME}')
     wait_for_db()
     run_migrations()
     run_metrics_loop()

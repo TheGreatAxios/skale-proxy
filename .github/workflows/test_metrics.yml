@@ -1,0 +1,25 @@
+name: Test metrics
+on: [push, pull_request]
+
+jobs:
+  test_proxy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.12]
+    env:
+      ENDPOINT: ${{ secrets.ENDPOINT }}
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install python dependencies
+      working-directory: metrics
+      run: pip install -r requirements.txt && pip install -r requirements-dev.txt
+    - name: Lint with ruff
+      working-directory: metrics
+      run: ruff check src/

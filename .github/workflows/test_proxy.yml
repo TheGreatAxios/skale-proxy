@@ -1,4 +1,4 @@
-name: Test
+name: Test proxy
 on: [push, pull_request]
 
 jobs:
@@ -24,12 +24,3 @@ jobs:
       run: bash ./scripts/install_python_dependencies_dev.sh
     - name: Lint with flake8
       run: flake8 .
-    # - name: Deploy manager contracts
-    #   run: |
-    #     bash ./helper-scripts/install_python_dependencies_dev.sh
-    # - name: Run tests
-    #   run: |
-    #     bash ./scripts/run_manager_tests.sh
-    # - name: Codecov
-    #   run: |
-    #     codecov -t $CODECOV_TOKEN

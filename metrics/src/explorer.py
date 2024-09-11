@@ -27,20 +27,20 @@ logger = logging.getLogger(__name__)
 
 def _get_explorer_url(network, chain_name):
     explorer_base_url = BASE_EXPLORER_URLS[network]
-    return HTTPS_PREFIX + chain_name + "." + explorer_base_url
+    return HTTPS_PREFIX + chain_name + '.' + explorer_base_url
 
 
 async def get_chain_stats(session, network: str, chain_name: str) -> Any:
     try:
         explorer_url = _get_explorer_url(network, chain_name)
-        async with session.get(f"{explorer_url}/api/v2/stats") as response:
+        async with session.get(f'{explorer_url}/api/v2/stats') as response:
             return await response.json()
     except Exception as e:
         logger.exception(e)
-        logger.error(f"Failed to get chain stats: {e}")
+        logger.error(f'Failed to get chain stats: {e}')
         return None
 
 
 def get_address_counters_url(network: str, chain_name: str, address: str) -> str:
     explorer_url = _get_explorer_url(network, chain_name)
-    return f"{explorer_url}/api/v2/addresses/{address}/counters"
+    return f'{explorer_url}/api/v2/addresses/{address}/counters'
