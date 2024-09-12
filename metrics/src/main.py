@@ -19,12 +19,13 @@
 
 import sys
 import asyncio
+import aiohttp
 import logging
 from time import sleep
 from datetime import datetime
 
 from src.logs import init_default_logger
-from src.collector import collect_metrics
+from src.collector import collect_metrics, download_metadata
 from src.config import (
     NETWORK_NAME,
     PROXY_ENDPOINTS,
@@ -32,6 +33,7 @@ from src.config import (
     METRICS_ERROR_CHECK_INTERVAL,
 )
 from src.models import db
+from src.db import bootstrap_db
 
 logger = logging.getLogger(__name__)
 
@@ -101,9 +103,30 @@ def wait_for_db():
     sys.exit(1)
 
 
+async def bootstrap_database():
+    logger.info('Checking if database needs bootstrapping...')
+    try:
+        async with aiohttp.ClientSession() as session:
+            metadata = await download_metadata(session, NETWORK_NAME)
+
+            apps_data = {}
+            for chain_name, chain_info in metadata.items():
+                if chain_name != '__offchain' and 'apps' in chain_info:
+                    apps_data[chain_name] = {
+                        app_name: app_info.get('contracts', [])
+                        for app_name, app_info in chain_info['apps'].items()
+                    }
+
+            await bootstrap_db(session, apps_data)
+    except Exception as e:
+        logger.exception(f'Error bootstrapping database: {e}')
+        sys.exit(1)
+
+
 if __name__ == '__main__':
     init_default_logger()
     logger.info(f'Starting metrics collector for network: {NETWORK_NAME}')
     wait_for_db()
     run_migrations()
+    asyncio.run(bootstrap_database())
     run_metrics_loop()

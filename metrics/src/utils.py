@@ -18,6 +18,13 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from typing import Any, Dict, List, Tuple
+from decimal import Decimal
+
+
+def decimal_default(obj):
+    if isinstance(obj, Decimal):
+        return float(obj)
+    raise TypeError
 
 
 def transform_to_dict(apps_counters: List[Tuple[str, Any]] | None) -> Dict[str, Any]:

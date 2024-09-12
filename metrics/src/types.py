@@ -19,15 +19,19 @@
 
 from typing import TypedDict, Optional, Dict, NewType
 
+AddressType = NewType('AddressType', str)
+
 
 class AddressCounter(TypedDict):
     gas_usage_count: str
     token_transfers_count: str
     transactions_count: str
     validations_count: str
+    transactions_last_day: int
+    transactions_last_7_days: int
+    transactions_last_30_days: int
 
 
-AddressType = NewType("Address", str)
 AddressCountersMap = Dict[AddressType, AddressCounter]
 
 
@@ -55,3 +59,19 @@ class ChainStats(TypedDict):
     total_transactions: str
     transactions_today: str
     tvl: Optional[float]
+
+
+class AppCounters(TypedDict):
+    app_name: str
+    counters: AddressCountersMap
+
+
+class ChainMetrics(TypedDict):
+    chain_stats: ChainStats
+    apps_counters: Dict[str, AppCounters]
+
+
+class MetricsData(TypedDict):
+    metrics: Dict[str, ChainMetrics]
+    gas: int
+    last_updated: int
