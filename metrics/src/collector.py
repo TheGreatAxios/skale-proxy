@@ -36,7 +36,7 @@ from src.config import (
     GITHUB_RAW_URL,
     OFFCHAIN_KEY,
 )
-from src.types import AddressCounter, AddressCountersMap, MetricsData, ChainMetrics
+from src.metrics_types import AddressCounter, AddressCountersMap, MetricsData, ChainMetrics
 
 
 logger = logging.getLogger(__name__)
