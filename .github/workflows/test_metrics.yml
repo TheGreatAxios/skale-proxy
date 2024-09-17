@@ -9,6 +9,7 @@ jobs:
         python-version: [3.12]
     env:
       ENDPOINT: ${{ secrets.ENDPOINT }}
+      PYTHONPATH: ${{ github.workspace }}/metrics
     steps:
     - uses: actions/checkout@v2
       with:
