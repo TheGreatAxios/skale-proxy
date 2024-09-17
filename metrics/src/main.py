@@ -31,6 +31,9 @@ from src.config import (
     PROXY_ENDPOINTS,
     METRICS_CHECK_INTERVAL,
     METRICS_ERROR_CHECK_INTERVAL,
+    DB_CONNECTION_RETRIES,
+    DB_CONNECTION_INTERVAL,
+    OFFCHAIN_KEY,
 )
 from src.models import db
 from src.db import bootstrap_db
@@ -85,10 +88,7 @@ def run_metrics_loop():
 
 
 def wait_for_db():
-    max_retries = 30
-    retry_interval = 2
-
-    for _ in range(max_retries):
+    for _ in range(DB_CONNECTION_RETRIES):
         try:
             db.connect()
             db.close()
@@ -96,8 +96,10 @@ def wait_for_db():
             return
         except Exception as e:
             logger.exception(e)
-            logger.warning(f'Database connection failed. Retrying in {retry_interval} seconds...')
-            sleep(retry_interval)
+            logger.warning(
+                f'Database connection failed. Retrying in {DB_CONNECTION_INTERVAL} seconds...'
+            )
+            sleep(DB_CONNECTION_INTERVAL)
 
     logger.error('Failed to connect to the database after multiple attempts.')
     sys.exit(1)
@@ -111,7 +113,7 @@ async def bootstrap_database():
 
             apps_data = {}
             for chain_name, chain_info in metadata.items():
-                if chain_name != '__offchain' and 'apps' in chain_info:
+                if chain_name != OFFCHAIN_KEY and 'apps' in chain_info:
                     apps_data[chain_name] = {
                         app_name: app_info.get('contracts', [])
                         for app_name, app_info in chain_info['apps'].items()

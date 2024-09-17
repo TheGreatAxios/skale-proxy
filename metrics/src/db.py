@@ -41,7 +41,7 @@ async def get_current_total_transactions(session, chain_name: str, address: str)
         return int(data.get('transactions_count', 0))
 
 
-async def bootstrap_db(session, apps_data: Dict[str, Dict[str, List[str]]]):
+async def bootstrap_db(session, apps_data: Dict[str, Dict[str, List[str]]]) -> None:
     today = date.today()
     thirty_days_ago = today - timedelta(days=BACKFILL_DB_DAYS)
     with db.atomic():

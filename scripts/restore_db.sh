@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 [ $# -eq 0 ] && { echo "Usage: $0 <backup_file>"; exit 1; }
 
 BACKUP_FILE=$1

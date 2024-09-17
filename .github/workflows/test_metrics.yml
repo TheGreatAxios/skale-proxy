@@ -11,13 +11,14 @@ jobs:
       ETH_ENDPOINT: ${{ secrets.ETH_ENDPOINT }}
       PYTHONPATH: ${{ github.workspace }}/metrics
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: true
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        cache: 'pip'
     - name: Install python dependencies
       working-directory: metrics
       run: pip install -r requirements.txt && pip install -r requirements-dev.txt

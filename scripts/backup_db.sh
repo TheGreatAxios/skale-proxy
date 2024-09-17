@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 [ $# -eq 0 ] && { echo "Usage: $0 <backup_directory>"; exit 1; }
 

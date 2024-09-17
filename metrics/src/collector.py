@@ -46,7 +46,7 @@ def get_metadata_url(network_name: str) -> str:
     return f'{GITHUB_RAW_URL}/skalenetwork/skale-network/master/metadata/{network_name}/chains.json'
 
 
-async def download_metadata(session, network_name: str):
+async def download_metadata(session, network_name: str) -> Dict:
     url = get_metadata_url(network_name)
     async with session.get(url) as response:
         metadata_srt = await response.text()
