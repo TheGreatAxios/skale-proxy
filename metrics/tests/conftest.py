@@ -1,7 +1,8 @@
+import os
+import json
 import pytest
 from faker import Faker
-
-from src.metrics_types import AddressCounter
+from aiohttp import web
 
 
 fake = Faker()
@@ -39,6 +40,10 @@ CHAIN_STATS = {
     'gas_price': {'average': 20.0, 'fast': 25.0, 'slow': 15.0},
 }
 
+TEST_NETWORK = 'testnet'
+TEST_CHAIN = 'chain2'
+TEST_ADDRESS = '0x1234'
+
 
 @pytest.fixture
 def sample_apps():
@@ -55,18 +60,68 @@ def sample_metadata():
     return SAMPLE_METADATA
 
 
-def generate_sample_counter() -> AddressCounter:
-    return {
-        'gas_usage_count': str(fake.random_number(digits=5)),
-        'token_transfers_count': str(fake.random_number(digits=3)),
-        'transactions_count': str(fake.random_number(digits=4)),
-        'validations_count': str(fake.random_number(digits=2)),
-        'transactions_last_day': fake.random_int(min=0, max=100),
-        'transactions_last_7_days': fake.random_int(min=0, max=500),
-        'transactions_last_30_days': fake.random_int(min=0, max=2000),
-    }
+def load_counters():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    json_file_path = os.path.join(current_dir, 'counters.json')
+
+    with open(json_file_path, 'r') as file:
+        return json.load(file)
+
+
+def get_latest_day_counters(counters):
+    return counters['2024-09-17']
+
+
+@pytest.fixture
+def counters():
+    return load_counters()
+
+
+@pytest.fixture
+def latest_day_counters():
+    return get_latest_day_counters()
 
 
 @pytest.fixture
 def mock_chain_stats_data():
     return CHAIN_STATS
+
+
+async def chain_stats_api(request):
+    return web.json_response(CHAIN_STATS)
+
+
+async def address_counter_api(request):
+    print('request')
+    address = request.match_info['address']
+    if not address:
+        return web.json_response({'error': 'Address parameter is required'}, status=400)
+
+    all_counters = get_latest_day_counters(load_counters())
+
+    for chain in all_counters.values():
+        for app in chain.values():
+            if address in app:
+                return web.json_response(app[address])
+
+    return web.json_response({}, status=404)
+
+
+def create_app():
+    app = web.Application()
+    app.router.add_route('GET', '/api/v2/stats', chain_stats_api)
+    app.router.add_route('GET', '/api/v2/addresses/{address}/counters', address_counter_api)
+    return app
+
+
+@pytest.fixture
+def mock_explorer_url(monkeypatch):
+    def mock_get_explorer_url(network, chain_name):
+        return ''
+
+    monkeypatch.setattr('src.explorer._get_explorer_url', mock_get_explorer_url)
+
+
+@pytest.fixture
+async def client(aiohttp_client):
+    return await aiohttp_client(create_app())
