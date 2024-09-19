@@ -25,20 +25,10 @@ from decimal import Decimal
 from peewee import fn, IntegrityError
 
 from src.models import db, Address, TransactionCount
-from src.config import NETWORK_NAME
-from src.explorer import get_address_counters_url
+from src.config import TRANSACTION_COUNT_FIELD, BACKFILL_DB_DAYS
+from src.explorer import get_current_total_transactions
 
 logger = logging.getLogger(__name__)
-
-TRANSACTION_COUNT_FIELD = 'transactions_count'
-BACKFILL_DB_DAYS = 30
-
-
-async def get_current_total_transactions(session, chain_name: str, address: str) -> int:
-    url = get_address_counters_url(NETWORK_NAME, chain_name, address)
-    async with session.get(url) as response:
-        data = await response.json()
-        return int(data.get('transactions_count', 0))
 
 
 async def bootstrap_db(session, apps_data: Dict[str, Dict[str, List[str]]]) -> None:

@@ -35,7 +35,7 @@ from src.config import (
     DB_CONNECTION_INTERVAL,
     OFFCHAIN_KEY,
 )
-from src.models import db
+from src.models import db, Address, TransactionCount
 from src.db import bootstrap_db
 
 logger = logging.getLogger(__name__)
@@ -44,8 +44,6 @@ logger = logging.getLogger(__name__)
 def run_migrations():
     logger.info('Running database migrations...')
     try:
-        from models import Address, TransactionCount
-
         with db:
             db.create_tables([Address, TransactionCount])
         logger.info('Database migrations completed successfully.')

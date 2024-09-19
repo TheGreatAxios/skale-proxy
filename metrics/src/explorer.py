@@ -20,7 +20,7 @@
 import logging
 from typing import Any
 
-from src.config import BASE_EXPLORER_URLS, HTTPS_PREFIX
+from src.config import BASE_EXPLORER_URLS, HTTPS_PREFIX, NETWORK_NAME
 
 logger = logging.getLogger(__name__)
 
@@ -44,3 +44,10 @@ async def get_chain_stats(session, network: str, chain_name: str) -> Any:
 def get_address_counters_url(network: str, chain_name: str, address: str) -> str:
     explorer_url = _get_explorer_url(network, chain_name)
     return f'{explorer_url}/api/v2/addresses/{address}/counters'
+
+
+async def get_current_total_transactions(session, chain_name: str, address: str) -> int:
+    url = get_address_counters_url(NETWORK_NAME, chain_name, address)
+    async with session.get(url) as response:
+        data = await response.json()
+        return int(data.get('transactions_count', 0))
