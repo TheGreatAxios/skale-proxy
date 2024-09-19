@@ -3,6 +3,9 @@ on: [push, pull_request]
 
 jobs:
   test_proxy:
+    defaults:
+      run:
+        working-directory: metrics
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -20,11 +23,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
         cache: 'pip'
     - name: Install python dependencies
-      working-directory: metrics
       run: pip install -r requirements.txt && pip install -r requirements-dev.txt
     - name: Lint with ruff
-      working-directory: metrics
       run: ruff check src/
     - name: Run metrics tests
-      working-directory: metrics
       run: pytest tests/
