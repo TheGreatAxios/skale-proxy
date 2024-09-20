@@ -23,11 +23,11 @@ from peewee import Model, CharField, ForeignKeyField, DateField, IntegerField
 
 
 db = PooledMySQLDatabase(
-    os.getenv("MYSQL_DATABASE"),
-    user=os.getenv("MYSQL_USER"),
-    password=os.getenv("MYSQL_PASSWORD"),
-    host=os.getenv("MYSQL_HOST"),
-    port=int(os.getenv("MYSQL_PORT", 3306)),
+    os.getenv('MYSQL_DATABASE'),
+    user=os.getenv('MYSQL_USER'),
+    password=os.getenv('MYSQL_PASSWORD'),
+    host=os.getenv('MYSQL_HOST'),
+    port=int(os.getenv('MYSQL_PORT', 3306)),
     max_connections=8,
     stale_timeout=300,
 )
@@ -45,10 +45,10 @@ class Address(BaseModel):
 
 
 class TransactionCount(BaseModel):
-    address = ForeignKeyField(Address, backref="transaction_counts")
+    address = ForeignKeyField(Address, backref='transaction_counts')
     date = DateField()
     total_transactions = IntegerField()
     daily_transactions = IntegerField()
 
     class Meta:
-        indexes = ((("address", "date"), True),)
+        indexes = ((('address', 'date'), True),)

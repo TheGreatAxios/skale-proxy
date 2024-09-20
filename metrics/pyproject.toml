@@ -1,0 +1,12 @@
+[tool.ruff]
+line-length = 100
+indent-width = 4
+lint.select = ["Q"]
+
+target-version = "py312"
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = 'single'

@@ -19,6 +19,18 @@ JSON-RPC endpoints for SKALE chains. It is based on NGINX.
 3. Export all required environment variables (see below)
 4. Run `scripts/run_proxy.sh`
 
+#### Pre-commit hook
+
+```bash
+ruff check --config metrics/pyproject.toml metrics/src/
+```
+
+#### Format code
+
+```bash
+ruff format src/
+```
+
 #### Required environment variables
 
 - `ETH_ENDPOINT` - endpoint of the Ethereum network where `skale-manager` contracts are deployed
