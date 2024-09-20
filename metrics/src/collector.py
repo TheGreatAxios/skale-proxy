@@ -77,7 +77,7 @@ async def fetch_address_data(session: ClientSession, url: str) -> AddressCounter
 
 
 async def get_address_counters(
-    session: ClientSession, network: str, chain_name: str, address: str
+    session: ClientSession, network: str, chain_name: str, app_name: str, address: str
 ) -> AddressCounter:
     url = get_address_counters_url(network, chain_name, address)
     for attempt in range(API_ERROR_RETRIES):
@@ -90,18 +90,20 @@ async def get_address_counters(
             month_ago = today - timedelta(days=30)
 
             transactions_last_day = await get_address_transaction_counts(
-                address, yesterday, yesterday
+                chain_name, app_name, address, yesterday, yesterday
             )
             transactions_last_7_days = await get_address_transaction_counts(
-                address, week_ago, yesterday
+                chain_name, app_name, address, week_ago, yesterday
             )
             transactions_last_30_days = await get_address_transaction_counts(
-                address, month_ago, yesterday
+                chain_name, app_name, address, month_ago, yesterday
             )
 
             data['transactions_last_day'] = transactions_last_day
             data['transactions_last_7_days'] = transactions_last_7_days
             data['transactions_last_30_days'] = transactions_last_30_days
+
+            await update_transaction_counts(chain_name, app_name, address, data)
 
             return data
         except ClientError as e:
@@ -114,9 +116,12 @@ async def get_address_counters(
     raise Exception(f'Failed to fetch data for {url}')
 
 
-async def get_all_address_counters(session, network, chain_name, addresses) -> AddressCountersMap:
+async def get_all_address_counters(
+    session, network, chain_name, app_name, addresses
+) -> AddressCountersMap:
     results = [
-        await get_address_counters(session, network, chain_name, address) for address in addresses
+        await get_address_counters(session, network, chain_name, app_name, address)
+        for address in addresses
     ]
     return dict(zip(addresses, results))
 
@@ -127,7 +132,7 @@ async def fetch_counters_for_app(
     logger.info(f'fetching counters for app {app_name}')
     if 'contracts' in app_info:
         counters = await get_all_address_counters(
-            session, network_name, chain_name, app_info['contracts']
+            session, network_name, chain_name, app_name, app_info['contracts']
         )
         return app_name, counters
     return app_name, None
@@ -161,13 +166,6 @@ async def collect_metrics(network_name: str) -> MetricsData:
                 'chain_stats': chain_stats,
                 'apps_counters': transform_to_dict(apps_counters),
             }
-
-            if apps_counters:
-                for app_name, app_counters in metrics[chain_name]['apps_counters'].items():
-                    for address, contract_data in app_counters.items():
-                        await update_transaction_counts(
-                            chain_name, app_name, address, contract_data
-                        )
 
         data: MetricsData = {
             'metrics': metrics,

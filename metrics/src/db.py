@@ -22,7 +22,7 @@ from datetime import date, timedelta
 from typing import List, Dict, Any
 from decimal import Decimal
 
-from peewee import fn, IntegrityError
+from peewee import fn, IntegrityError, DoesNotExist
 
 from src.models import db, Address, TransactionCount
 from src.config import TRANSACTION_COUNT_FIELD, BACKFILL_DB_DAYS
@@ -97,12 +97,22 @@ async def update_transaction_counts(
         )
 
 
-async def get_address_transaction_counts(address: str, start_date: date, end_date: date) -> int:
+async def get_or_create_address(chain_name: str, address: str, app_name: str) -> Address:
+    try:
+        return Address.get(Address.address == address)
+    except DoesNotExist:
+        return Address.create(chain_name=chain_name, address=address, app_name=app_name)
+
+
+async def get_address_transaction_counts(
+    chain_name: str, app_name: str, address: str, start_date: date, end_date: date
+) -> int:
     with db.atomic():
+        addr = await get_or_create_address(chain_name, address, app_name)
         result = (
             TransactionCount.select(fn.SUM(TransactionCount.daily_transactions))
             .where(
-                (TransactionCount.address == Address.get(address=address))
+                (TransactionCount.address == addr)
                 & (TransactionCount.date.between(start_date, end_date))
             )
             .scalar()
