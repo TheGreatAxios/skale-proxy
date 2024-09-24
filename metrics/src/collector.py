@@ -21,93 +21,160 @@ import json
 import logging
 import asyncio
 import aiohttp
-from datetime import datetime
-from typing import Any, Dict, List, Tuple
+from datetime import datetime, timedelta
+from typing import Tuple, Optional, Dict
+from aiohttp import ClientError, ClientSession
 
-import requests
+from src.explorer import get_address_counters_url, get_chain_stats
+from src.gas import calc_avg_gas_price
+from src.db import update_transaction_counts, get_address_transaction_counts
+from src.utils import transform_to_dict, decimal_default
+from src.config import (
+    METRICS_FILEPATH,
+    API_ERROR_TIMEOUT,
+    API_ERROR_RETRIES,
+    GITHUB_RAW_URL,
+    OFFCHAIN_KEY,
+)
+from src.metrics_types import AddressCounter, AddressCountersMap, MetricsData, ChainMetrics
 
-from explorer import get_address_counters_url, get_chain_stats
-from gas import calc_avg_gas_price
-from config import METRICS_FILEPATH
 
 logger = logging.getLogger(__name__)
 
 
-def get_metadata_url(network_name: str):
-    return f'https://raw.githubusercontent.com/skalenetwork/skale-network/master/metadata/{network_name}/chains.json' # noqa
+def get_metadata_url(network_name: str) -> str:
+    return f'{GITHUB_RAW_URL}/skalenetwork/skale-network/master/metadata/{network_name}/chains.json'
 
 
-def download_metadata(network_name: str):
+async def download_metadata(session, network_name: str) -> Dict:
     url = get_metadata_url(network_name)
-    response = requests.get(url)
-    response.raise_for_status()
-    return response.json()
-
-
-async def get_address_counters(session, network, chain_name, address):
-    url = get_address_counters_url(network, chain_name, address)
     async with session.get(url) as response:
+        metadata_srt = await response.text()
+        return json.loads(metadata_srt)
+
+
+def get_empty_address_counter() -> AddressCounter:
+    return {
+        'gas_usage_count': '0',
+        'token_transfers_count': '0',
+        'transactions_count': '0',
+        'validations_count': '0',
+        'transactions_last_day': 0,
+        'transactions_last_7_days': 0,
+        'transactions_last_30_days': 0,
+    }
+
+
+async def fetch_address_data(session: ClientSession, url: str) -> AddressCounter:
+    async with session.get(url) as response:
+        if response.status == 404:
+            data = await response.json()
+            if data.get('message') == 'Not found':
+                logger.warning(f'Address not found at {url}. Returning empty counter.')
+                return get_empty_address_counter()
+        response.raise_for_status()
         return await response.json()
 
 
-async def get_all_address_counters(network, chain_name, addresses):
-    results = {}
-    async with aiohttp.ClientSession() as session:
-        tasks = []
-        for address in addresses:
-            tasks.append(get_address_counters(session, network, chain_name, address))
+async def get_address_counters(
+    session: ClientSession, network: str, chain_name: str, app_name: str, address: str
+) -> AddressCounter:
+    url = get_address_counters_url(network, chain_name, address)
+    for attempt in range(API_ERROR_RETRIES):
+        try:
+            data = await fetch_address_data(session, url)
 
-        responses = await asyncio.gather(*tasks)
+            today = datetime.now().date()
+            yesterday = today - timedelta(days=1)
+            week_ago = today - timedelta(days=7)
+            month_ago = today - timedelta(days=30)
 
-        for address, response in zip(addresses, responses):
-            results[address] = response
+            transactions_last_day = await get_address_transaction_counts(
+                chain_name, app_name, address, yesterday, yesterday
+            )
+            transactions_last_7_days = await get_address_transaction_counts(
+                chain_name, app_name, address, week_ago, yesterday
+            )
+            transactions_last_30_days = await get_address_transaction_counts(
+                chain_name, app_name, address, month_ago, yesterday
+            )
 
-    return results
+            data['transactions_last_day'] = transactions_last_day
+            data['transactions_last_7_days'] = transactions_last_7_days
+            data['transactions_last_30_days'] = transactions_last_30_days
+
+            await update_transaction_counts(chain_name, app_name, address, data)
+
+            return data
+        except ClientError as e:
+            if attempt < API_ERROR_RETRIES - 1:
+                logger.warning(f'Attempt {attempt + 1} failed for {url}. Retrying... Error: {e}')
+                await asyncio.sleep(API_ERROR_TIMEOUT)
+            else:
+                logger.error(f'All attempts failed for {url}. Error: {e}')
+                raise
+    raise Exception(f'Failed to fetch data for {url}')
 
 
-async def _fetch_counters_for_app(network_name, chain_name, app_name, app_info):
+async def get_all_address_counters(
+    session, network, chain_name, app_name, addresses
+) -> AddressCountersMap:
+    results = [
+        await get_address_counters(session, network, chain_name, app_name, address)
+        for address in addresses
+    ]
+    return dict(zip(addresses, results))
+
+
+async def fetch_counters_for_app(
+    session, network_name, chain_name, app_name, app_info
+) -> Tuple[str, Optional[AddressCountersMap]]:
     logger.info(f'fetching counters for app {app_name}')
     if 'contracts' in app_info:
-        counters = await get_all_address_counters(network_name, chain_name, app_info['contracts'])
+        counters = await get_all_address_counters(
+            session, network_name, chain_name, app_name, app_info['contracts']
+        )
         return app_name, counters
     return app_name, None
 
 
-async def fetch_counters_for_apps(chain_info, network_name, chain_name):
-    tasks = []
-    for app_name, app_info in chain_info['apps'].items():
-        task = _fetch_counters_for_app(network_name, chain_name, app_name, app_info)
-        tasks.append(task)
+async def fetch_counters_for_apps(session, chain_info, network_name, chain_name):
+    tasks = [
+        fetch_counters_for_app(session, network_name, chain_name, app_name, app_info)
+        for app_name, app_info in chain_info['apps'].items()
+    ]
     return await asyncio.gather(*tasks)
 
 
-def transform_to_dict(apps_counters: List[Tuple[str, Any]] | None) -> Dict[str, Any]:
-    if not apps_counters:
-        return {}
-    results = {}
-    for app_name, counters in apps_counters:
-        results[app_name] = counters
-    return results
+async def collect_metrics(network_name: str) -> MetricsData:
+    async with aiohttp.ClientSession() as session:
+        metadata = await download_metadata(session, network_name)
+        metrics: Dict[str, ChainMetrics] = {}
 
+        for chain_name, chain_info in metadata.items():
+            if chain_name == OFFCHAIN_KEY:
+                continue
+            chain_stats = await get_chain_stats(session, network_name, chain_name)
+            apps_counters = None
 
-def collect_metrics(network_name: str):
-    metadata = download_metadata(network_name)
-    metrics = {}
-    for chain_name, chain_info in metadata.items():
-        apps_counters = None
-        chain_stats = get_chain_stats(network_name, chain_name)
-        if 'apps' in chain_info:
-            apps_counters = asyncio.run(
-                fetch_counters_for_apps(chain_info, network_name, chain_name))
-        metrics[chain_name] = {
-            'chain_stats': chain_stats,
-            'apps_counters': transform_to_dict(apps_counters),
+            if 'apps' in chain_info:
+                apps_counters = await fetch_counters_for_apps(
+                    session, chain_info, network_name, chain_name
+                )
+
+            metrics[chain_name] = {
+                'chain_stats': chain_stats,
+                'apps_counters': transform_to_dict(apps_counters),
+            }
+
+        data: MetricsData = {
+            'metrics': metrics,
+            'gas': int(calc_avg_gas_price()),
+            'last_updated': int(datetime.now().timestamp()),
         }
-    data = {
-        'metrics': metrics,
-        'gas': int(calc_avg_gas_price()),
-        'last_updated': int(datetime.now().timestamp())
-    }
-    logger.info(f'Saving metrics to {METRICS_FILEPATH}')
-    with open(METRICS_FILEPATH, 'w') as f:
-        json.dump(data, f, indent=4, sort_keys=True)
+
+        logger.info(f'Saving metrics to {METRICS_FILEPATH}')
+        with open(METRICS_FILEPATH, 'w') as f:
+            json.dump(data, f, indent=4, sort_keys=True, default=decimal_default)
+
+        return data

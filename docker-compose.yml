@@ -1,4 +1,3 @@
-version: '3'
 services:
   skale-proxy:
     environment:
@@ -20,8 +19,9 @@ services:
         max-file: "5"
         max-size: "200m"
     restart: unless-stopped
+
   nginx:
-    image: nginx:1.20.2
+    image: nginx:1.24.0
     container_name: proxy_nginx
     network_mode: host
     volumes:
@@ -34,10 +34,15 @@ services:
       options:
         max-file: "200"
         max-size: "500m"
+
   metrics:
     environment:
       ETH_ENDPOINT: ${ETH_ENDPOINT}
       NETWORK_NAME: ${NETWORK_NAME}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_HOST: db
+      MYSQL_DATABASE: metrics
     image: metrics:latest
     container_name: metrics
     build:
@@ -51,3 +56,31 @@ services:
         max-file: "5"
         max-size: "50m"
     restart: unless-stopped
+    depends_on:
+      - db
+    networks:
+      - proxy
+
+  db:
+    image: mysql:8.0
+    container_name: db
+    restart: always
+    environment:
+      - MYSQL_DATABASE=metrics
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    networks:
+      - proxy
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysql_data:
+
+networks:
+  proxy:
+    driver: bridge

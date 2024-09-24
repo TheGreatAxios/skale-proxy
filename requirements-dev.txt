@@ -1,3 +1,1 @@
-flake8==3.7.8
-pytest==5.4.3
-skale.py==5.7dev7
+flake8==7.1.1

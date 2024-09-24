@@ -19,7 +19,7 @@
 
 import logging
 from web3 import Web3
-from config import ENDPOINT, GAS_ESTIMATION_ITERATIONS, BLOCK_SAMPLING
+from src.config import ENDPOINT, GAS_ESTIMATION_ITERATIONS, BLOCK_SAMPLING
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +36,7 @@ def calc_avg_gas_price():
     block_number = w3.eth.block_number
     total_gas_used = 0
 
-    logger.info(f'Getting historic block gas prices...')
+    logger.info('Getting historic block gas prices...')
     for index in range(GAS_ESTIMATION_ITERATIONS):
         block_number = block_number - BLOCK_SAMPLING * index
         if block_number < 0:

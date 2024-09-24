@@ -35,8 +35,8 @@ LOG_BACKUP_COUNT = 3
 def get_file_handler(log_filepath, log_level):
     formatter = Formatter(LOG_FORMAT)
     f_handler = py_handlers.RotatingFileHandler(
-        log_filepath, maxBytes=LOG_FILE_SIZE_BYTES,
-        backupCount=LOG_BACKUP_COUNT)
+        log_filepath, maxBytes=LOG_FILE_SIZE_BYTES, backupCount=LOG_BACKUP_COUNT
+    )
     f_handler.setFormatter(formatter)
     f_handler.setLevel(log_level)
     return f_handler
