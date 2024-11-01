@@ -43,6 +43,7 @@ CHAIN_STATS = {
 TEST_NETWORK = 'testnet'
 TEST_CHAIN = 'chain2'
 TEST_ADDRESS = '0x1234'
+TEST_APP = 'test-app'
 
 
 @pytest.fixture
@@ -80,6 +81,25 @@ def counters():
 @pytest.fixture
 def latest_day_counters():
     return get_latest_day_counters()
+
+
+@pytest.fixture
+def mock_db_data():
+    return {
+        'transactions_last_day': 50,
+        'transactions_last_7_days': 300,
+        'transactions_last_30_days': 1000,
+    }
+
+
+@pytest.fixture
+def mock_address_data():
+    return {
+        'gas_usage_count': '16935',
+        'token_transfers_count': '174',
+        'transactions_count': '1734',
+        'validations_count': '22',
+    }
 
 
 @pytest.fixture
