@@ -32,7 +32,7 @@ jobs:
     - name: Lint with ruff
       run: ruff check src/
     - name: Run MySQL container
-      run: docker compose up -d mysql
+      run: docker compose up -d db
     - name: Prepare database
       run: python tests/prepare_db.py
     - name: Run metrics tests
