@@ -84,32 +84,37 @@ async def fetch_address_data(
         logger.debug(f'Explorer response for {address}: {json.dumps(current_data, indent=2)}')
 
         await update_transaction_counts(chain_name, app_name, address, current_data)
-
-        today = date.today()
-        week_ago = today - timedelta(days=7)
-        month_ago = today - timedelta(days=30)
-
-        transactions_today = await get_address_transaction_counts(
-            chain_name, app_name, address, today, today
-        )
-        transactions_last_7_days = await get_address_transaction_counts(
-            chain_name, app_name, address, week_ago, today
-        )
-        transactions_last_30_days = await get_address_transaction_counts(
-            chain_name, app_name, address, month_ago, today
-        )
-
-        result: AddressCounter = {
-            'gas_usage_count': str(current_data.get('gas_usage_count', '0')),
-            'token_transfers_count': str(current_data.get('token_transfers_count', '0')),
-            'transactions_count': str(current_data.get('transactions_count', '0')),
-            'validations_count': str(current_data.get('validations_count', '0')),
-            'transactions_today': transactions_today,
-            'transactions_last_7_days': transactions_last_7_days,
-            'transactions_last_30_days': transactions_last_30_days,
-        }
+        result = await get_db_counts(current_data, chain_name, app_name, address)
         logger.info(f'Fetched data for {address} at {url}: {result}')
         return result
+
+
+async def get_db_counts(
+    current_data: Dict, chain_name: str, app_name: str, address: str
+) -> AddressCounter:
+    today = date.today()
+    tomorrow = today + timedelta(days=1)
+    week_ago = today - timedelta(days=7)
+    month_ago = today - timedelta(days=30)
+
+    transactions_today = await get_address_transaction_counts(
+        chain_name, app_name, address, today, tomorrow
+    )
+    transactions_last_7_days = await get_address_transaction_counts(
+        chain_name, app_name, address, week_ago, today
+    )
+    transactions_last_30_days = await get_address_transaction_counts(
+        chain_name, app_name, address, month_ago, today
+    )
+    return {
+        'gas_usage_count': str(current_data.get('gas_usage_count', '0')),
+        'token_transfers_count': str(current_data.get('token_transfers_count', '0')),
+        'transactions_count': str(current_data.get('transactions_count', '0')),
+        'validations_count': str(current_data.get('validations_count', '0')),
+        'transactions_today': transactions_today,
+        'transactions_last_7_days': transactions_last_7_days,
+        'transactions_last_30_days': transactions_last_30_days,
+    }
 
 
 async def get_address_counters(
