@@ -5,7 +5,7 @@ from datetime import date
 from faker import Faker
 from aiohttp import web
 from unittest.mock import patch
-from metrics.tests.prepare_db import load_test_data
+from tests.prepare_db import load_test_data
 
 fake = Faker()
 
