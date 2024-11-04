@@ -86,7 +86,7 @@ def latest_day_counters():
 @pytest.fixture
 def mock_db_data():
     return {
-        'transactions_last_day': 50,
+        'transactions_today': 50,
         'transactions_last_7_days': 300,
         'transactions_last_30_days': 1000,
     }

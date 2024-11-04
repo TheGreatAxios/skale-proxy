@@ -22,7 +22,7 @@ async def test_fetch_address_data_success(
         patch('src.collector.get_address_transaction_counts') as mock_get_counts,
     ):
         mock_get_counts.side_effect = [
-            mock_db_data['transactions_last_day'],
+            mock_db_data['transactions_today'],
             mock_db_data['transactions_last_7_days'],
             mock_db_data['transactions_last_30_days'],
         ]
@@ -39,7 +39,7 @@ async def test_fetch_address_data_success(
         assert result['validations_count'] == mock_address_data['validations_count']
 
         # Verify historical data
-        assert result['transactions_last_day'] == mock_db_data['transactions_last_day']
+        assert result['transactions_today'] == mock_db_data['transactions_today']
         assert result['transactions_last_7_days'] == mock_db_data['transactions_last_7_days']
         assert result['transactions_last_30_days'] == mock_db_data['transactions_last_30_days']
 
