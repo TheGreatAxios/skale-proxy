@@ -7,7 +7,7 @@
           "token_transfers_count": "123",
           "transactions_count": "1234",
           "validations_count": "12",
-          "transactions_last_day": 50,
+          "transactions_today": 50,
           "transactions_last_7_days": 250,
           "transactions_last_30_days": 1000
         },
@@ -16,7 +16,7 @@
           "token_transfers_count": "234",
           "transactions_count": "2345",
           "validations_count": "23",
-          "transactions_last_day": 60,
+          "transactions_today": 60,
           "transactions_last_7_days": 300,
           "transactions_last_30_days": 1200
         },
@@ -25,7 +25,7 @@
           "token_transfers_count": "345",
           "transactions_count": "3456",
           "validations_count": "34",
-          "transactions_last_day": 70,
+          "transactions_today": 70,
           "transactions_last_7_days": 350,
           "transactions_last_30_days": 1400
         }
@@ -36,7 +36,7 @@
           "token_transfers_count": "456",
           "transactions_count": "4567",
           "validations_count": "45",
-          "transactions_last_day": 80,
+          "transactions_today": 80,
           "transactions_last_7_days": 400,
           "transactions_last_30_days": 1600
         },
@@ -45,7 +45,7 @@
           "token_transfers_count": "567",
           "transactions_count": "5678",
           "validations_count": "56",
-          "transactions_last_day": 90,
+          "transactions_today": 90,
           "transactions_last_7_days": 450,
           "transactions_last_30_days": 1800
         }
@@ -58,7 +58,7 @@
           "token_transfers_count": "168",
           "transactions_count": "1689",
           "validations_count": "16",
-          "transactions_last_day": 5,
+          "transactions_today": 5,
           "transactions_last_7_days": 25,
           "transactions_last_30_days": 100
         }
@@ -73,7 +73,7 @@
           "token_transfers_count": "125",
           "transactions_count": "1284",
           "validations_count": "13",
-          "transactions_last_day": 52,
+          "transactions_today": 52,
           "transactions_last_7_days": 252,
           "transactions_last_30_days": 1052
         },
@@ -82,7 +82,7 @@
           "token_transfers_count": "236",
           "transactions_count": "2405",
           "validations_count": "24",
-          "transactions_last_day": 62,
+          "transactions_today": 62,
           "transactions_last_7_days": 302,
           "transactions_last_30_days": 1262
         },
@@ -91,7 +91,7 @@
           "token_transfers_count": "347",
           "transactions_count": "3526",
           "validations_count": "35",
-          "transactions_last_day": 72,
+          "transactions_today": 72,
           "transactions_last_7_days": 352,
           "transactions_last_30_days": 1472
         }
@@ -102,7 +102,7 @@
           "token_transfers_count": "458",
           "transactions_count": "4647",
           "validations_count": "46",
-          "transactions_last_day": 82,
+          "transactions_today": 82,
           "transactions_last_7_days": 402,
           "transactions_last_30_days": 1682
         },
@@ -111,7 +111,7 @@
           "token_transfers_count": "569",
           "transactions_count": "5768",
           "validations_count": "57",
-          "transactions_last_day": 92,
+          "transactions_today": 92,
           "transactions_last_7_days": 452,
           "transactions_last_30_days": 1892
         }
@@ -124,7 +124,7 @@
           "token_transfers_count": "169",
           "transactions_count": "1694",
           "validations_count": "17",
-          "transactions_last_day": 6,
+          "transactions_today": 6,
           "transactions_last_7_days": 26,
           "transactions_last_30_days": 106
         }
@@ -139,7 +139,7 @@
           "token_transfers_count": "127",
           "transactions_count": "1336",
           "validations_count": "14",
-          "transactions_last_day": 54,
+          "transactions_today": 54,
           "transactions_last_7_days": 254,
           "transactions_last_30_days": 1106
         },
@@ -148,7 +148,7 @@
           "token_transfers_count": "238",
           "transactions_count": "2467",
           "validations_count": "25",
-          "transactions_last_day": 64,
+          "transactions_today": 64,
           "transactions_last_7_days": 304,
           "transactions_last_30_days": 1326
         },
@@ -157,7 +157,7 @@
           "token_transfers_count": "349",
           "transactions_count": "3598",
           "validations_count": "36",
-          "transactions_last_day": 74,
+          "transactions_today": 74,
           "transactions_last_7_days": 354,
           "transactions_last_30_days": 1546
         }
@@ -168,7 +168,7 @@
           "token_transfers_count": "460",
           "transactions_count": "4729",
           "validations_count": "47",
-          "transactions_last_day": 84,
+          "transactions_today": 84,
           "transactions_last_7_days": 404,
           "transactions_last_30_days": 1766
         },
@@ -177,7 +177,7 @@
           "token_transfers_count": "571",
           "transactions_count": "5860",
           "validations_count": "58",
-          "transactions_last_day": 94,
+          "transactions_today": 94,
           "transactions_last_7_days": 454,
           "transactions_last_30_days": 1986
         }
@@ -190,7 +190,7 @@
           "token_transfers_count": "170",
           "transactions_count": "1700",
           "validations_count": "18",
-          "transactions_last_day": 7,
+          "transactions_today": 7,
           "transactions_last_7_days": 27,
           "transactions_last_30_days": 113
         }
@@ -205,7 +205,7 @@
           "token_transfers_count": "129",
           "transactions_count": "1390",
           "validations_count": "15",
-          "transactions_last_day": 56,
+          "transactions_today": 56,
           "transactions_last_7_days": 256,
           "transactions_last_30_days": 1162
         },
@@ -214,7 +214,7 @@
           "token_transfers_count": "240",
           "transactions_count": "2531",
           "validations_count": "26",
-          "transactions_last_day": 66,
+          "transactions_today": 66,
           "transactions_last_7_days": 306,
           "transactions_last_30_days": 1392
         },
@@ -223,7 +223,7 @@
           "token_transfers_count": "351",
           "transactions_count": "3672",
           "validations_count": "37",
-          "transactions_last_day": 76,
+          "transactions_today": 76,
           "transactions_last_7_days": 356,
           "transactions_last_30_days": 1622
         }
@@ -234,7 +234,7 @@
           "token_transfers_count": "462",
           "transactions_count": "4813",
           "validations_count": "48",
-          "transactions_last_day": 86,
+          "transactions_today": 86,
           "transactions_last_7_days": 406,
           "transactions_last_30_days": 1852
         },
@@ -243,7 +243,7 @@
           "token_transfers_count": "573",
           "transactions_count": "5954",
           "validations_count": "59",
-          "transactions_last_day": 96,
+          "transactions_today": 96,
           "transactions_last_7_days": 456,
           "transactions_last_30_days": 2082
         }
@@ -256,7 +256,7 @@
           "token_transfers_count": "171",
           "transactions_count": "1707",
           "validations_count": "19",
-          "transactions_last_day": 8,
+          "transactions_today": 8,
           "transactions_last_7_days": 28,
           "transactions_last_30_days": 121
         }
@@ -271,7 +271,7 @@
           "token_transfers_count": "131",
           "transactions_count": "1446",
           "validations_count": "16",
-          "transactions_last_day": 58,
+          "transactions_today": 58,
           "transactions_last_7_days": 258,
           "transactions_last_30_days": 1220
         },
@@ -280,7 +280,7 @@
           "token_transfers_count": "242",
           "transactions_count": "2597",
           "validations_count": "27",
-          "transactions_last_day": 68,
+          "transactions_today": 68,
           "transactions_last_7_days": 308,
           "transactions_last_30_days": 1460
         },
@@ -289,7 +289,7 @@
           "token_transfers_count": "353",
           "transactions_count": "3748",
           "validations_count": "38",
-          "transactions_last_day": 78,
+          "transactions_today": 78,
           "transactions_last_7_days": 358,
           "transactions_last_30_days": 1700
         }
@@ -300,7 +300,7 @@
           "token_transfers_count": "464",
           "transactions_count": "4899",
           "validations_count": "49",
-          "transactions_last_day": 88,
+          "transactions_today": 88,
           "transactions_last_7_days": 408,
           "transactions_last_30_days": 1940
         },
@@ -309,7 +309,7 @@
           "token_transfers_count": "575",
           "transactions_count": "6050",
           "validations_count": "60",
-          "transactions_last_day": 98,
+          "transactions_today": 98,
           "transactions_last_7_days": 458,
           "transactions_last_30_days": 2180
         }
@@ -322,7 +322,7 @@
           "token_transfers_count": "172",
           "transactions_count": "1715",
           "validations_count": "20",
-          "transactions_last_day": 9,
+          "transactions_today": 9,
           "transactions_last_7_days": 29,
           "transactions_last_30_days": 130
         }
@@ -337,7 +337,7 @@
           "token_transfers_count": "133",
           "transactions_count": "1504",
           "validations_count": "17",
-          "transactions_last_day": 60,
+          "transactions_today": 60,
           "transactions_last_7_days": 260,
           "transactions_last_30_days": 1280
         },
@@ -346,7 +346,7 @@
           "token_transfers_count": "244",
           "transactions_count": "2665",
           "validations_count": "28",
-          "transactions_last_day": 70,
+          "transactions_today": 70,
           "transactions_last_7_days": 310,
           "transactions_last_30_days": 1530
         },
@@ -355,7 +355,7 @@
           "token_transfers_count": "355",
           "transactions_count": "3826",
           "validations_count": "39",
-          "transactions_last_day": 80,
+          "transactions_today": 80,
           "transactions_last_7_days": 360,
           "transactions_last_30_days": 1780
         }
@@ -366,7 +366,7 @@
           "token_transfers_count": "466",
           "transactions_count": "4987",
           "validations_count": "50",
-          "transactions_last_day": 90,
+          "transactions_today": 90,
           "transactions_last_7_days": 410,
           "transactions_last_30_days": 2030
         },
@@ -375,7 +375,7 @@
           "token_transfers_count": "577",
           "transactions_count": "6148",
           "validations_count": "61",
-          "transactions_last_day": 100,
+          "transactions_today": 100,
           "transactions_last_7_days": 460,
           "transactions_last_30_days": 2280
         }
@@ -388,7 +388,7 @@
           "token_transfers_count": "173",
           "transactions_count": "1724",
           "validations_count": "21",
-          "transactions_last_day": 10,
+          "transactions_today": 10,
           "transactions_last_7_days": 30,
           "transactions_last_30_days": 140
         }
@@ -403,7 +403,7 @@
           "token_transfers_count": "135",
           "transactions_count": "1564",
           "validations_count": "18",
-          "transactions_last_day": 62,
+          "transactions_today": 62,
           "transactions_last_7_days": 262,
           "transactions_last_30_days": 1342
         },
@@ -412,7 +412,7 @@
           "token_transfers_count": "246",
           "transactions_count": "2735",
           "validations_count": "29",
-          "transactions_last_day": 72,
+          "transactions_today": 72,
           "transactions_last_7_days": 312,
           "transactions_last_30_days": 1602
         },
@@ -421,7 +421,7 @@
           "token_transfers_count": "357",
           "transactions_count": "3906",
           "validations_count": "40",
-          "transactions_last_day": 82,
+          "transactions_today": 82,
           "transactions_last_7_days": 362,
           "transactions_last_30_days": 1862
         }
@@ -432,7 +432,7 @@
           "token_transfers_count": "468",
           "transactions_count": "5077",
           "validations_count": "51",
-          "transactions_last_day": 92,
+          "transactions_today": 92,
           "transactions_last_7_days": 412,
           "transactions_last_30_days": 2122
         },
@@ -441,7 +441,7 @@
           "token_transfers_count": "579",
           "transactions_count": "6248",
           "validations_count": "62",
-          "transactions_last_day": 102,
+          "transactions_today": 102,
           "transactions_last_7_days": 462,
           "transactions_last_30_days": 2382
         }
@@ -454,7 +454,7 @@
           "token_transfers_count": "174",
           "transactions_count": "1734",
           "validations_count": "22",
-          "transactions_last_day": 11,
+          "transactions_today": 11,
           "transactions_last_7_days": 31,
           "transactions_last_30_days": 151
         }

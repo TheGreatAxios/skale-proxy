@@ -27,7 +27,7 @@ class AddressCounter(TypedDict):
     token_transfers_count: str
     transactions_count: str
     validations_count: str
-    transactions_last_day: int
+    transactions_today: int
     transactions_last_7_days: int
     transactions_last_30_days: int
 

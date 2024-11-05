@@ -21,7 +21,7 @@ import json
 import logging
 import asyncio
 import aiohttp
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 from typing import Tuple, Optional, Dict, List
 from aiohttp import ClientError, ClientSession
 
@@ -62,7 +62,7 @@ def get_empty_address_counter() -> AddressCounter:
         'token_transfers_count': '0',
         'transactions_count': '0',
         'validations_count': '0',
-        'transactions_last_day': 0,
+        'transactions_today': 0,
         'transactions_last_7_days': 0,
         'transactions_last_30_days': 0,
     }
@@ -81,35 +81,40 @@ async def fetch_address_data(
         response.raise_for_status()
 
         current_data: Dict = await response.json()
+        logger.debug(f'Explorer response for {address}: {json.dumps(current_data, indent=2)}')
 
         await update_transaction_counts(chain_name, app_name, address, current_data)
-
-        today = datetime.now().date()
-        yesterday = today - timedelta(days=1)
-        week_ago = today - timedelta(days=7)
-        month_ago = today - timedelta(days=30)
-
-        transactions_last_day = await get_address_transaction_counts(
-            chain_name, app_name, address, yesterday, yesterday
-        )
-        transactions_last_7_days = await get_address_transaction_counts(
-            chain_name, app_name, address, week_ago, yesterday
-        )
-        transactions_last_30_days = await get_address_transaction_counts(
-            chain_name, app_name, address, month_ago, yesterday
-        )
-
-        result: AddressCounter = {
-            'gas_usage_count': str(current_data.get('gas_usage_count', '0')),
-            'token_transfers_count': str(current_data.get('token_transfers_count', '0')),
-            'transactions_count': str(current_data.get('transactions_count', '0')),
-            'validations_count': str(current_data.get('validations_count', '0')),
-            'transactions_last_day': transactions_last_day,
-            'transactions_last_7_days': transactions_last_7_days,
-            'transactions_last_30_days': transactions_last_30_days,
-        }
+        result = await get_db_counts(current_data, chain_name, app_name, address)
         logger.info(f'Fetched data for {address} at {url}: {result}')
         return result
+
+
+async def get_db_counts(
+    current_data: Dict, chain_name: str, app_name: str, address: str
+) -> AddressCounter:
+    today = date.today()
+    tomorrow = today + timedelta(days=1)
+    week_ago = today - timedelta(days=7)
+    month_ago = today - timedelta(days=30)
+
+    transactions_today = await get_address_transaction_counts(
+        chain_name, app_name, address, today, tomorrow
+    )
+    transactions_last_7_days = await get_address_transaction_counts(
+        chain_name, app_name, address, week_ago, today
+    )
+    transactions_last_30_days = await get_address_transaction_counts(
+        chain_name, app_name, address, month_ago, today
+    )
+    return {
+        'gas_usage_count': str(current_data.get('gas_usage_count', '0')),
+        'token_transfers_count': str(current_data.get('token_transfers_count', '0')),
+        'transactions_count': str(current_data.get('transactions_count', '0')),
+        'validations_count': str(current_data.get('validations_count', '0')),
+        'transactions_today': transactions_today,
+        'transactions_last_7_days': transactions_last_7_days,
+        'transactions_last_30_days': transactions_last_30_days,
+    }
 
 
 async def get_address_counters(

@@ -1,9 +1,11 @@
 import os
 import json
 import pytest
+from datetime import date
 from faker import Faker
 from aiohttp import web
-
+from unittest.mock import patch
+from tests.prepare_db import load_test_data
 
 fake = Faker()
 
@@ -41,9 +43,11 @@ CHAIN_STATS = {
 }
 
 TEST_NETWORK = 'testnet'
-TEST_CHAIN = 'chain2'
-TEST_ADDRESS = '0x1234'
+TEST_CHAIN = 'test-chain'
+TEST_ADDRESS = '0x1234567890123456789012345678901234567890'
 TEST_APP = 'test-app'
+MOCK_DATE = date(2024, 5, 4)
+TEST_DATA = load_test_data()
 
 
 @pytest.fixture
@@ -59,6 +63,11 @@ def sample_chain_info():
 @pytest.fixture
 def sample_metadata():
     return SAMPLE_METADATA
+
+
+@pytest.fixture
+def sample_counters():
+    return TEST_DATA
 
 
 def load_counters():
@@ -86,20 +95,27 @@ def latest_day_counters():
 @pytest.fixture
 def mock_db_data():
     return {
-        'transactions_last_day': 50,
+        'transactions_today': 50,
         'transactions_last_7_days': 300,
         'transactions_last_30_days': 1000,
     }
 
 
 @pytest.fixture
-def mock_address_data():
+def address_data():
     return {
         'gas_usage_count': '16935',
         'token_transfers_count': '174',
         'transactions_count': '1734',
         'validations_count': '22',
     }
+
+
+@pytest.fixture
+def mock_today():
+    with patch('src.collector.date') as mock_date:
+        mock_date.today.return_value = MOCK_DATE
+        yield mock_date
 
 
 @pytest.fixture

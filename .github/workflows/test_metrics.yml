@@ -13,6 +13,11 @@ jobs:
     env:
       ETH_ENDPOINT: ${{ secrets.ETH_ENDPOINT }}
       PYTHONPATH: ${{ github.workspace }}/metrics
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_DATABASE: metrics
     steps:
     - uses: actions/checkout@v4
       with:
@@ -26,5 +31,9 @@ jobs:
       run: pip install -r requirements.txt && pip install -r requirements-dev.txt
     - name: Lint with ruff
       run: ruff check src/
+    - name: Run MySQL container
+      run: docker compose up -d db
+    - name: Prepare database
+      run: python tests/prepare_db.py
     - name: Run metrics tests
       run: pytest tests/
