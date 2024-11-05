@@ -64,6 +64,7 @@ def run_metrics_loop():
         current_date = datetime.now().date()
 
         if last_run_date is None or current_date > last_run_date:
+            sleep(METRICS_CHECK_INTERVAL)
             logger.info(f'Daily metrics collection started for {NETWORK_NAME}...')
             try:
                 with db.connection_context():
